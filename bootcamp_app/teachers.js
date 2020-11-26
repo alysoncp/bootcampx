@@ -11,11 +11,13 @@ const cohortName = process.argv[2];
 const limit = process.argv[3];
 
 pool.query(`
-SELECT students.id as student_id, students.name as name, cohorts.name as cohort
-FROM students
+SELECT DISTINCT teachers.name AS teacher_name, cohorts.name AS cohort_name
+FROM teachers
+JOIN assistance_requests ON teachers.id = assistance_requests.teacher_id
+JOIN students ON assistance_requests.student_id = students.id
 JOIN cohorts ON students.cohort_id = cohorts.id
-WHERE cohorts.name LIKE '${cohortName}%'
-LIMIT ${limit};
+WHERE cohorts.name='JUL02'
+ORDER BY teachers.name;
 `)
 .then(res => {
   console.log(res.rows);
